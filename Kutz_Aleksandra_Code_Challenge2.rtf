@@ -1,0 +1,184 @@
+{\rtf1\ansi\ansicpg1252\cocoartf2761
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fnil\fcharset0 HelveticaNeue;}
+{\colortbl;\red255\green255\blue255;}
+{\*\expandedcolortbl;;}
+\margl1440\margr1440\vieww11520\viewh8400\viewkind0
+\deftab560
+\pard\pardeftab560\slleading20\pardirnatural\partightenfactor0
+
+\f0\fs26 \cf0 Sub Challenge2AleksandraKutz():\
+\
+    Dim ws As Worksheet\
+    Dim lastRow As Long\
+    Dim i As Long\
+    Dim proc As Double\
+    Dim Ticker_Name As String\
+    Dim TickerTotal As Double\
+    Dim VolTotalRow As Long\
+    Dim columnName9 As String\
+    Dim columnNumber9 As Integer\
+    Dim columnName10 As String\
+    Dim columnNumber10 As Integer\
+    Dim columnName11 As String\
+    Dim columnNumber11 As Integer\
+    Dim columnName12 As String\
+    Dim columnNumber12 As Integer\
+    Dim columnName16 As String\
+    Dim columnNumber16 As Integer\
+    Dim columnName17 As String\
+    Dim columnNumber17 As Integer\
+    Dim columnName15a As String\
+    Dim columnNumber15a As Integer\
+    Dim columnName15b As String\
+    Dim columnNumber15b As Integer\
+    Dim columnName15c As String\
+    Dim columnNumber15c As Integer\
+    \
+    columnName9 = "Ticker"\
+    columnNumber9 = 9\
+    columnName10 = "Quarterly Change"\
+    columnNumber10 = 10\
+    columnName11 = "Percent Change"\
+    columnNumber11 = 11\
+    columnName12 = "Total Stock Volume"\
+    columnNumber12 = 12\
+    columnName16 = "Ticker"\
+    columnNumber16 = 16\
+    columnName17 = "Value"\
+    columnNumber17 = 17\
+    columnName15a = "Greatest % Increase"\
+    columnNumber15a = 15\
+    columnName15b = "Greatest % Decrease"\
+    columnNumber15b = 15\
+    columnName15c = "Greatest Total Volume"\
+    columnNumber15c = 15\
+    \
+    proc = 1\
+    TickerTotal = 0\
+\
+    For Each ws In Worksheets\
+    \
+    ws.Cells(1, 9).Value = columnName9\
+    ws.Cells(1, 10).Value = columnName10\
+    ws.Cells(1, 11).Value = columnName11\
+    ws.Cells(1, 12).Value = columnName12\
+    ws.Cells(1, 16).Value = columnName16\
+    ws.Cells(1, 17).Value = columnName17\
+    ws.Cells(2, 15).Value = columnName15a\
+    ws.Cells(3, 15).Value = columnName15b\
+    ws.Cells(4, 15).Value = columnName15c\
+    \
+        VolTotalRow = 2\
+\
+        lastRow = ws.Cells(ws.Rows.Count, 2).End(xlUp).Row\
+        \
+        For i = 2 To lastRow\
+            ws.Cells(i, 10).Value = ws.Cells(i, 6).Value - ws.Cells(i, 3).Value\
+        Next i\
+\
+        lastRow = ws.Cells(ws.Rows.Count, 1).End(xlUp).Row\
+\
+        For i = 2 To lastRow\
+            If Cells(i, 3) = 0 Then\
+                ws.Cells(i, 11).Value = 0\
+            Else\
+                ws.Cells(i, 11).Value = ws.Cells(i, 10).Value / Cells(i, 3)\
+                ws.Cells(i, 11).NumberFormat = "0.00%"\
+            End If\
+            \
+      \
+            \
+            If ws.Cells(i, 10).Value > 0 Then\
+            \
+        ws.Cells(i, 10).Interior.ColorIndex = 4\
+        \
+         ElseIf ws.Cells(i, 10).Value < 0 Then\
+         \
+         ws.Cells(i, 10).Interior.ColorIndex = 3\
+         \
+            End If\
+           \
+            \
+            \
+        Next i\
+\
+        For i = 2 To lastRow\
+            If Cells(i + 1, 1).Value <> Cells(i, 1).Value Then\
+                Ticker_Name = Cells(i, 1).Value\
+                TickerTotal = TickerTotal + Cells(i, 7).Value\
+                ws.Range("I" & VolTotalRow).Value = Ticker_Name\
+                ws.Range("L" & VolTotalRow).Value = TickerTotal\
+                VolTotalRow = VolTotalRow + 1\
+                TickerTotal = 0\
+            Else\
+                TickerTotal = TickerTotal + Cells(i, 7).Value\
+            End If\
+        Next i\
+        TickerTotal = TickerTotal + Cells(i, 7).Value\
+    Next ws\
+    \
+    Dim MaxV As Double\
+    Dim MaxRow As Long\
+    Dim MinV As Double\
+    Dim MinRow As Long\
+    Dim MaxTicker As String\
+    Dim MinTicker As String\
+    Dim Total_Stock As Double\
+    Dim StockMaxRow As Long\
+    Dim StockTicker As String\
+\
+\
+    For Each ws In ThisWorkbook.Sheets\
+        lastRow = ws.Cells(ws.Rows.Count, "K").End(xlUp).Row\
+        \
+       \
+        MaxV = ws.Cells(2, "K").Value\
+        MaxRow = 2\
+        MinV = ws.Cells(2, "K").Value\
+        MinRow = 2\
+\
+        For i = 2 To lastRow\
+            If ws.Cells(i, "K").Value > MaxV Then\
+                MaxV = ws.Cells(i, "K").Value\
+                MaxRow = i\
+            End If\
+            \
+            If ws.Cells(i, "K").Value < MinV Then\
+                MinV = ws.Cells(i, "K").Value\
+                MinRow = i\
+            End If\
+            \
+            ws.Cells(i, 17).NumberFormat = "0.00%"\
+        Next i\
+\
+        MaxTicker = ws.Cells(MaxRow, "A").Value\
+        MinTicker = ws.Cells(MinRow, "A").Value\
+\
+        ws.Cells(2, "Q").Value = MaxV\
+        ws.Cells(2, "P").Value = MaxTicker\
+        ws.Cells(3, "Q").Value = MinV\
+        ws.Cells(3, "P").Value = MinTicker\
+        \
+        \
+        Total_Stock = ws.Cells(2, "L").Value\
+        StockMaxRow = 2\
+\
+        For i = 2 To lastRow\
+            If ws.Cells(i, "L").Value > Total_Stock Then\
+                Total_Stock = ws.Cells(i, "L").Value\
+                StockMaxRow = i\
+                StockTicker = ws.Cells(i, "A").Value\
+            End If\
+        Next i\
+\
+        ws.Cells(4, "Q").Value = Total_Stock\
+        ws.Cells(4, "P").Value = StockTicker\
+        \
+        ws.Cells(4, "Q").NumberFormat = "General"\
+        \
+    Next ws\
+    \
+    \
+End Sub\
+\
+}
